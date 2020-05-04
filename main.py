@@ -1,7 +1,7 @@
-from earthquakes import get_earthquake
+from earthquakes import get_earthquakes
 
-days = 2
-mag, place = get_earthquake(days)
-
-print("The largest earthquake of last {} days had magnitude {} and was located at {}".format(days, mag, place))
+days = 1
+result = get_earthquake(days)
+print(result)
+#print("The largest earthquake of last {} days had magnitude {} and was located at {} on {}".format(days, mag, place, time))
 
