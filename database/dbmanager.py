@@ -27,6 +27,21 @@ class DatabaseManager(object):
 
         self._close_connection()
 
+    def max_date(self):
+        date = self.connection.execute('SELECT MAX(date) FROM earthquakes')
+        return date.fetchall()[0][0]
+
+    def select_highest(self, limit):
+        highest_earthquakes = self.connection.execute('''SELECT * FROM earthquakes
+                                                      ORDER BY magnitude DESC
+                                                      LIMIT ''' + str(limit))
+        return highest_earthquakes.fetchall()
+
+    def select_daily_stats(self):
+        daily_stats = self.connection.execute(
+            '''SELECT date, MAX(magnitude),MIN(magnitude),AVG(magnitude) FROM earthquakes GROUP BY date''')
+        return daily_stats.fetchall()
+
     def _create_table(self):
         if not self.connection:
             self._connect()
