@@ -32,7 +32,7 @@ class DatabaseManager(object):
         return date.fetchall()[0][0]
 
     def select_highest(self, limit):
-        highest_earthquakes = self.connection.execute('''SELECT * FROM earthquakes
+        highest_earthquakes = self.connection.execute('''SELECT date, magnitude, location FROM earthquakes
                                                       ORDER BY magnitude DESC
                                                       LIMIT ''' + str(limit))
         return highest_earthquakes.fetchall()
