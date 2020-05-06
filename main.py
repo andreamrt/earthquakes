@@ -50,3 +50,5 @@ print("The largest earthquake of last {} days had magnitude {} and was located a
 if not args.csv:
     write_daily_stats(db)
     write_highest_earthquakes(db, 10)
+
+db.close_connection()

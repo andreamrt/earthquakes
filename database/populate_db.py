@@ -15,6 +15,7 @@ if args.populate:
     start_date = (datetime.now() + timedelta(days=-14)).strftime("%Y-%m-%d")
     earthquakes = get_earthquakes(start_date)
     db.add_elements(earthquakes)
+    db.close_connection()
 
 # TODO: else?
 if args.delete:

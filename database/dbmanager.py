@@ -7,6 +7,9 @@ class DatabaseManager(object):
         self.connection = None
         self._create_table()
 
+    def close_connection(self):
+        self.connection.close()
+
     def add_elements(self, elements):
         if not self.connection:
             self._connect()
@@ -17,29 +20,39 @@ class DatabaseManager(object):
             except sqlite3.IntegrityError:
                 pass
 
-        self._close_connection()
-
     def clear(self):
         if not self.connection:
             self._connect()
 
         self.connection.execute('DELETE FROM earthquakes')
 
-        self._close_connection()
+        self.close_connection()
 
     def max_date(self):
+        if not self.connection:
+            self._connect()
+
         date = self.connection.execute('SELECT MAX(date) FROM earthquakes')
+
         return date.fetchall()[0][0]
 
     def select_highest(self, limit):
+        if not self.connection:
+            self._connect()
+
         highest_earthquakes = self.connection.execute('''SELECT date, magnitude, location FROM earthquakes
                                                       ORDER BY magnitude DESC
                                                       LIMIT ''' + str(limit))
+
         return highest_earthquakes.fetchall()
 
     def select_daily_stats(self):
+        if not self.connection:
+            self._connect()
+
         daily_stats = self.connection.execute(
             '''SELECT date, MAX(magnitude),MIN(magnitude),AVG(magnitude) FROM earthquakes GROUP BY date''')
+
         return daily_stats.fetchall()
 
     def _create_table(self):
@@ -57,9 +70,6 @@ class DatabaseManager(object):
 
     def _connect(self):
         self.connection = sqlite3.connect(self.database_file)
-
-    def _close_connection(self):
-        self.connection.close()
 
     def _add_element(self, element):
         self.connection.execute('INSERT INTO earthquakes(magnitude, location, date) VALUES(?,?,?)',
