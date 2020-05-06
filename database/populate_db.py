@@ -1,6 +1,7 @@
 from database.dbmanager import DatabaseManager
-from earthquakes import get_earthquakes
+from utils.get_earthquakes import get_earthquakes
 import argparse
+from datetime import datetime, timedelta
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group(required=True)
@@ -11,7 +12,8 @@ args = parser.parse_args()
 db = DatabaseManager('earthquakes.db')
 
 if args.populate:
-    earthquakes = get_earthquakes(14)
+    start_date = (datetime.now() + timedelta(days=-14)).strftime("%Y-%m-%d")
+    earthquakes = get_earthquakes(start_date)
     db.add_elements(earthquakes)
 
 # TODO: else?

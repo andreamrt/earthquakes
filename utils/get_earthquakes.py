@@ -1,13 +1,12 @@
-import requests
-from datetime import datetime, timedelta
 import json
+from datetime import datetime
+
+import requests
 
 USGS_URL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?starttime={}&format=geojson&limit=20000'
 
 
-def get_earthquakes(days_past):
-    # get the date of today - days_past days at 00 AM
-    start_date = (datetime.now() + timedelta(days=-days_past)).strftime("%Y-%m-%d")
+def get_earthquakes(start_date):
     URL = USGS_URL.format(start_date)
     events = json.loads(requests.get(URL).text)
     results = []
