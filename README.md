@@ -45,7 +45,7 @@ Using Python 3.X:
 $ python -m unittest tests/test_csv.py
 ```
 ## REQUIREMENTS
-Note that the project requires the ```json``` and ```requests``` module to run. Note also that USGS limits the maximum 
+Note that the project requires the ```json```, ```sqlite3``` and ```requests``` module to run. Note also that USGS limits the maximum 
 number of events returned to 20000, so that it may be useless to query  for events that have an age of more than a few 
 days, as only the lastest 20000 events will be returned.
 

@@ -1,5 +1,7 @@
 import argparse
 from datetime import datetime, timedelta
+import sys
+sys.path.insert(0, '..')
 
 from database.dbmanager import DatabaseManager
 from utils.get_earthquakes import get_earthquakes
