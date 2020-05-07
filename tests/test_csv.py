@@ -6,6 +6,7 @@ from database.dbmanager import DatabaseManager
 
 
 class TestCsv(unittest.TestCase):
+    """Test case for the correct creation of non-empty csv files"""
 
     def setUp(self):
         self.temporary_database = DatabaseManager('/tmp/temp.db')

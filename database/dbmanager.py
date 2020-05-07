@@ -2,15 +2,35 @@ import sqlite3
 
 
 class DatabaseManager(object):
+    """Database Manager class
+    responsible for:
+    - creating anc closing the connection
+    - adding new entries
+    - selecting stored information
+    """
+
     def __init__(self, filename):
+        """Constructor.
+
+        Parameters:
+            - filename: the file where to store the database
+        """
         self.database_file = filename
         self.connection = None
         self._create_table()
 
     def close_connection(self):
+        """Close an existing connection"""
         self.connection.close()
 
     def add_elements(self, elements):
+        """Add a list of elements to the database.
+
+        Parameters:
+            - elements: list of entries
+        """
+
+        # there must be an active connection
         if not self.connection:
             self._connect()
 
@@ -21,6 +41,9 @@ class DatabaseManager(object):
                 pass
 
     def clear(self):
+        """Clear the database"""
+
+        # self contained: open and close connection
         if not self.connection:
             self._connect()
 
@@ -29,6 +52,7 @@ class DatabaseManager(object):
         self.close_connection()
 
     def max_date(self):
+        """Extract the date of the most recent earthquake"""
         if not self.connection:
             self._connect()
 
@@ -37,6 +61,11 @@ class DatabaseManager(object):
         return date.fetchall()[0][0]
 
     def select_highest(self, limit):
+        """Select the earthquakes with highest magnitude.
+
+        Parameters:
+            - limit: number of earthquakes to return
+        """
         if not self.connection:
             self._connect()
 
@@ -47,6 +76,7 @@ class DatabaseManager(object):
         return highest_earthquakes.fetchall()
 
     def select_daily_stats(self):
+        """Select the maximum, minimum and average magnitude per day"""
         if not self.connection:
             self._connect()
 
@@ -54,6 +84,10 @@ class DatabaseManager(object):
             '''SELECT date, MAX(magnitude),MIN(magnitude),AVG(magnitude) FROM earthquakes GROUP BY date''')
 
         return daily_stats.fetchall()
+
+    def get_filename(self):
+        """Return the name of the database file"""
+        return self.database_file
 
     def _create_table(self):
         if not self.connection:

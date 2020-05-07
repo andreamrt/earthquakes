@@ -6,7 +6,16 @@ from database.dbmanager import DatabaseManager
 from utils.get_earthquakes import get_earthquakes
 
 
-def check_positive(value):
+def check_positive_integer(value):
+    """Convert a string to an integer value and check it is positive.
+
+    Parameters:
+        - value: the string to be converted and checked
+
+    Raise:
+        - ArgumentTypeError: if the value is <= 0
+        - ValueError: if the value cannot be transformed in an integer
+    """
     try:
         int_value = int(value)
         if int_value <= 0:
@@ -18,7 +27,8 @@ def check_positive(value):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--days', dest='days', type=check_positive, help='number of days to analyze, must be > 0',
+parser.add_argument('-d', '--days', dest='days', type=check_positive_integer,
+                    help='number of days to analyze, must be > 0',
                     required=True)
 parser.add_argument('--no-cache', dest='cache', action='store_true', help='do not use cached data', default=False)
 parser.add_argument('--no-csv', dest='csv', action='store_true', help='do not save additional information on csv files',
@@ -33,8 +43,10 @@ start_date = (datetime.now() + timedelta(days=-args.days)).strftime("%Y-%m-%d")
 if not args.cache:
     last_cached_date = datetime.strptime(db.max_date(), '%Y-%m-%d')
     if last_cached_date is not None and last_cached_date > datetime.strptime(start_date, '%Y-%m-%d'):
+        # we have some of the data already stored in the database
         start_date = last_cached_date.strftime("%Y-%m-%d")
 
+# fetch and add missing elements
 earthquakes = get_earthquakes(start_date)
 db.add_elements(earthquakes)
 
@@ -47,6 +59,7 @@ print("The largest earthquake of last {} days had magnitude {} and was located a
                                                                                                    highest_earthquake[
                                                                                                        0]))
 
+# write additional information to csv files
 if not args.csv:
     write_daily_stats(db)
     write_highest_earthquakes(db, 10)
