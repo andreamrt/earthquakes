@@ -42,20 +42,25 @@ args = parser.parse_args()
 db = DatabaseManager('database/earthquakes.db')
 
 # get the date of today - days_past days at 00 AM
-start_date = (datetime.now() + timedelta(days=-args.days)).strftime("%Y-%m-%d")
+start_date = search_date = (
+    datetime.now() + timedelta(days=-args.days)).strftime("%Y-%m-%d")
 
+print(start_date)
 if not args.cache:
-    last_cached_date = datetime.strptime(db.max_date(), '%Y-%m-%d')
-    if (last_cached_date is not None and
-            last_cached_date > datetime.strptime(start_date, '%Y-%m-%d')):
-        # we have some of the data already stored in the database
-        start_date = last_cached_date.strftime("%Y-%m-%d")
+    max_date = db.max_date()
+    min_date = db.min_date()
+    if max_date and min_date:
+        last_cached_date = datetime.strptime(max_date, '%Y-%m-%d')
+        first_cached_date = datetime.strptime(min_date, '%Y-%m-%d')
+        if first_cached_date <= datetime.strptime(start_date, '%Y-%m-%d'):
+            # we have some of the data already stored in the database
+            search_date = last_cached_date.strftime("%Y-%m-%d")
 
 # fetch and add missing elements
-earthquakes = get_earthquakes(start_date)
+earthquakes = get_earthquakes(search_date)
 db.add_elements(earthquakes)
 
-highest_earthquake = db.select_highest(1)[0]
+highest_earthquake = db.select_highest(1, start_date)[0]
 print(
     ('The largest earthquake of last {} days had magnitude {}\n'
      'and was located at {} on {}')
@@ -68,6 +73,6 @@ print(
 # write additional information to csv files
 if not args.csv:
     write_daily_stats(db)
-    write_highest_earthquakes(db, 10)
+    write_highest_earthquakes(db, start_date, 10)
 
 db.close_connection()

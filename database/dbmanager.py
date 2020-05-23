@@ -48,6 +48,7 @@ class DatabaseManager(object):
             self._connect()
 
         self.connection.execute('DELETE FROM earthquakes')
+        self.connection.commit()
 
         self.close_connection()
 
@@ -60,19 +61,30 @@ class DatabaseManager(object):
 
         return date.fetchall()[0][0]
 
-    def select_highest(self, limit):
+    def min_date(self):
+        """Extract the date of the least recent earthquake"""
+        if not self.connection:
+            self._connect()
+
+        date = self.connection.execute('SELECT MIN(date) FROM earthquakes')
+
+        return date.fetchall()[0][0]
+
+    def select_highest(self, limit, start_date):
         """Select the earthquakes with highest magnitude.
 
         Parameters:
             - limit: number of earthquakes to return
+            - start_date: starting date for the search
         """
         if not self.connection:
             self._connect()
 
         highest_earthquakes = self.connection.execute(
             '''SELECT date, magnitude, location FROM earthquakes
+                WHERE date >= '{}'
                 ORDER BY magnitude DESC
-                LIMIT ''' + str(limit))
+                LIMIT {}'''.format(start_date, limit))
 
         return highest_earthquakes.fetchall()
 
