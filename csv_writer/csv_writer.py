@@ -3,7 +3,7 @@ import csv
 """Write additional information regarding earthquakes to csv files"""
 
 
-def write_daily_stats(db):
+def write_daily_stats(db, filename='daily_stats.csv'):
     """Write the maximum, minimum and average magnitude per day to a csv file.
 
     Parameters:
@@ -11,7 +11,7 @@ def write_daily_stats(db):
     """
     try:
         daily_stats = db.select_daily_stats()
-        with open('daily_stats.csv', 'w') as csv_file:
+        with open(filename, 'w') as csv_file:
             writer = csv.writer(csv_file, delimiter=',')
             writer.writerow(['Date', 'Max', 'Min', 'Avg'])
             for stats in daily_stats:
@@ -20,7 +20,8 @@ def write_daily_stats(db):
         pass
 
 
-def write_highest_earthquakes(db,  start_date, limit=1):
+def write_highest_earthquakes(db,  start_date, limit=1,
+                              filename='highest_earthquakes.csv'):
     """Write the earthquakes with highest magnitude to a csv file.
     The number of earthquakes written is determined by a limit.
 
@@ -31,7 +32,7 @@ def write_highest_earthquakes(db,  start_date, limit=1):
     """
     try:
         highest_earthquakes = db.select_highest(limit, start_date)
-        with open('highest_earthquakes.csv', 'w') as csv_file:
+        with open(filename, 'w') as csv_file:
             writer = csv.writer(csv_file, delimiter=',')
             writer.writerow(['Date', 'Magnitude', 'Location'])
             for earthquake in highest_earthquakes:
