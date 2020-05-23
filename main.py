@@ -50,8 +50,7 @@ if not args.cache:
 earthquakes = get_earthquakes(search_date)
 db.add_elements(earthquakes)
 
-highest = db.select_highest(args.table_limit, start_date)
-highest_earthquake = highest[0]
+highest_earthquake = db.select_highest(1, start_date)[0]
 print(
     ('The largest earthquake of last {} days had magnitude {}\n'
      'and was located at {} on {}')
@@ -64,7 +63,8 @@ if not args.table:
     print('\n These are the {} strongest earthquakes in the past {} days:\n'
           .format(args.table_limit, args.days))
 
-    table = pd.DataFrame(highest)
+    highest_earthquakes = db.select_highest(args.table_limit, start_date)
+    table = pd.DataFrame(highest_earthquakes)
     table.index += 1
     table.columns = ['Date', 'Magnitude', 'Location']
     print(table)
