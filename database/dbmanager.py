@@ -69,9 +69,10 @@ class DatabaseManager(object):
         if not self.connection:
             self._connect()
 
-        highest_earthquakes = self.connection.execute('''SELECT date, magnitude, location FROM earthquakes
-                                                      ORDER BY magnitude DESC
-                                                      LIMIT ''' + str(limit))
+        highest_earthquakes = self.connection.execute(
+            '''SELECT date, magnitude, location FROM earthquakes
+                ORDER BY magnitude DESC
+                LIMIT ''' + str(limit))
 
         return highest_earthquakes.fetchall()
 
@@ -81,7 +82,8 @@ class DatabaseManager(object):
             self._connect()
 
         daily_stats = self.connection.execute(
-            '''SELECT date, MAX(magnitude),MIN(magnitude),AVG(magnitude) FROM earthquakes GROUP BY date''')
+            '''SELECT date, MAX(magnitude),MIN(magnitude),AVG(magnitude) FROM earthquakes 
+                GROUP BY date''')
 
         return daily_stats.fetchall()
 

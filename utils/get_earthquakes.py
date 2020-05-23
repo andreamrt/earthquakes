@@ -22,7 +22,8 @@ def get_earthquakes(start_date):
             magnitude = float(event['properties']['mag'])
             place = event['properties']['place']
             # timestamp is saved in millisecond format
-            time = str(datetime.fromtimestamp(event['properties']['time'] / 1000).date())
+            time = str(datetime.fromtimestamp(
+                event['properties']['time'] / 1000).date())
 
             results.append([magnitude, place, time])
         except TypeError:

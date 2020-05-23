@@ -23,15 +23,18 @@ def check_positive_integer(value):
                 "%s is an invalid positive integer value. The number of days must be > 0" % value)
         return int_value
     except ValueError:
-        raise argparse.ArgumentTypeError("%s is not a positive integer value" % value)
+        raise argparse.ArgumentTypeError(
+            "%s is not a positive integer value" % value)
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--days', dest='days', type=check_positive_integer,
                     help='number of days to analyze, must be > 0',
                     required=True)
-parser.add_argument('--no-cache', dest='cache', action='store_true', help='do not use cached data', default=False)
-parser.add_argument('--no-csv', dest='csv', action='store_true', help='do not save additional information on csv files',
+parser.add_argument('--no-cache', dest='cache', action='store_true',
+                    help='do not use cached data', default=False)
+parser.add_argument('--no-csv', dest='csv', action='store_true',
+                    help='do not save additional information on csv files',
                     default=False)
 args = parser.parse_args()
 
@@ -51,13 +54,11 @@ earthquakes = get_earthquakes(start_date)
 db.add_elements(earthquakes)
 
 highest_earthquake = db.select_highest(1)[0]
-print("The largest earthquake of last {} days had magnitude {} and was located at {} on {}".format(args.days,
-                                                                                                   highest_earthquake[
-                                                                                                       1],
-                                                                                                   highest_earthquake[
-                                                                                                       2],
-                                                                                                   highest_earthquake[
-                                                                                                       0]))
+print("The largest earthquake of last {} days had magnitude {} and was located at {} on {}"
+      .format(args.days,
+              highest_earthquake[1],
+              highest_earthquake[2],
+              highest_earthquake[0]))
 
 # write additional information to csv files
 if not args.csv:
