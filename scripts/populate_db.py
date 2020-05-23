@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 import sys
 sys.path.insert(0, '..')
 
-from utils.get_earthquakes import get_earthquakes
-from database.dbmanager import DatabaseManager
+from utils.get_earthquakes import get_earthquakes  # noqa: E402
+from database.dbmanager import DatabaseManager  # noqa: E402K
 
 
 """Populate or clear the database"""

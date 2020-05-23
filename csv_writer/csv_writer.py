@@ -18,8 +18,8 @@ def write_daily_stats(db):
 
 
 def write_highest_earthquakes(db, limit=1):
-    """Write the earthquakes with highest magnitude to a csv file. The number of earthquakes written is determined
-    by a limit.
+    """Write the earthquakes with highest magnitude to a csv file.
+    The number of earthquakes written is determined by a limit.
 
     Parameters:
         - db: the database containing the information

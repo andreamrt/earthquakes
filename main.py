@@ -20,7 +20,8 @@ def check_positive_integer(value):
         int_value = int(value)
         if int_value <= 0:
             raise argparse.ArgumentTypeError(
-                "%s is an invalid positive integer value. The number of days must be > 0" % value)
+                ('%s is an invalid positive integer value. '
+                 'The number of days must be > 0') % value)
         return int_value
     except ValueError:
         raise argparse.ArgumentTypeError(
@@ -45,7 +46,8 @@ start_date = (datetime.now() + timedelta(days=-args.days)).strftime("%Y-%m-%d")
 
 if not args.cache:
     last_cached_date = datetime.strptime(db.max_date(), '%Y-%m-%d')
-    if last_cached_date is not None and last_cached_date > datetime.strptime(start_date, '%Y-%m-%d'):
+    if (last_cached_date is not None and
+            last_cached_date > datetime.strptime(start_date, '%Y-%m-%d')):
         # we have some of the data already stored in the database
         start_date = last_cached_date.strftime("%Y-%m-%d")
 
@@ -54,11 +56,14 @@ earthquakes = get_earthquakes(start_date)
 db.add_elements(earthquakes)
 
 highest_earthquake = db.select_highest(1)[0]
-print("The largest earthquake of last {} days had magnitude {} and was located at {} on {}"
-      .format(args.days,
-              highest_earthquake[1],
-              highest_earthquake[2],
-              highest_earthquake[0]))
+print(
+    ('The largest earthquake of last {} days had magnitude {}\n'
+     'and was located at {} on {}')
+    .format(args.days,
+            highest_earthquake[1],
+            highest_earthquake[2],
+            highest_earthquake[0])
+)
 
 # write additional information to csv files
 if not args.csv:

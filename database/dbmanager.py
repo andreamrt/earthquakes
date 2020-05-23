@@ -82,7 +82,8 @@ class DatabaseManager(object):
             self._connect()
 
         daily_stats = self.connection.execute(
-            '''SELECT date, MAX(magnitude),MIN(magnitude),AVG(magnitude) FROM earthquakes 
+            '''SELECT date, MAX(magnitude),MIN(magnitude),AVG(magnitude)
+                FROM earthquakes
                 GROUP BY date''')
 
         return daily_stats.fetchall()
@@ -98,7 +99,7 @@ class DatabaseManager(object):
         self.connection.execute('''CREATE TABLE IF NOT EXISTS earthquakes (
                                         id INTEGER PRIMARY KEY,
                                         magnitude FLOAT,
-                                        location TEXT NOT NULL,	    
+                                        location TEXT NOT NULL,
                                         date DATE NOT NULL,
                                         UNIQUE (magnitude, location, date)
                                         )
@@ -108,6 +109,7 @@ class DatabaseManager(object):
         self.connection = sqlite3.connect(self.database_file)
 
     def _add_element(self, element):
-        self.connection.execute('INSERT INTO earthquakes(magnitude, location, date) VALUES(?,?,?)',
-                                (element[0], element[1], element[2]))
+        self.connection.execute(
+            'INSERT INTO earthquakes(magnitude, location, date) VALUES(?,?,?)',
+            (element[0], element[1], element[2]))
         self.connection.commit()

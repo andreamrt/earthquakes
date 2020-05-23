@@ -3,7 +3,8 @@ from datetime import datetime
 
 import requests
 
-USGS_URL = 'https://earthquake.usgs.gov/fdsnws/event/1/query?starttime={}&format=geojson&limit=20000'
+USGS_URL = ('https://earthquake.usgs.gov/fdsnws/event/1/query?starttime={}'
+            '&format=geojson&limit=20000')
 
 
 def get_earthquakes(start_date):
