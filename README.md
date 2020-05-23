@@ -13,12 +13,15 @@ to csv files.
 
 Using Python 3.X:
 ```
-$ python main.py -d [days] [--no-cache] [--no-csv]
+$ python main.py -d [days] [--no-cache] [--no-csv] [--no-table] [-tl rows] [-cl rows]
 ```
 where:
 - days: the number of days. REQUIRED
 - no-cache: ignore the data cached in the database. OPTIONAL
 - no-csv: do not write additional information to csv files. OPTIONAL  
+- no-table: do not not print highest earthquakes. OPTIONAL  
+- tl rows: specify the number of rows of the table to print  OPTIONAL DEFAULT = 10
+- Cl rows: specify the number of rows of the CSV  OPTIONAL DEFAULT = 10
 
 
 #### Optional
@@ -29,10 +32,10 @@ information online).
 Using Python 3.X:
 ```
 $ cd scripts
-$ python populate_db.py [-p | -d ]
+$ python populate_db.py [-p days| -d ]
 ```
 where p and d are mutually exclusive and:
-- p: populate the database
+- p: populate the database. The number of days is OPTIONAL DEFAULT = 14.
 - d: clean the database
 
 Note: one of the two must be provided
@@ -45,7 +48,5 @@ Using Python 3.X:
 $ python -m unittest tests/test_csv.py
 ```
 ## REQUIREMENTS
-Note that the project requires the ```json```, ```sqlite3``` and ```requests``` module to run. Note also that USGS limits the maximum 
-number of events returned to 20000, so that it may be useless to query  for events that have an age of more than a few 
-days, as only the lastest 20000 events will be returned.
+Note that the project requires the ```json```, ```sqlite3```, ```pandas``` and ```requests``` modules to run. Note also that USGS limits the maximum number of events returned to 20000, so that it may be useless to query  for events that have an age of more than a few days, as only the lastest 20000 events will be returned.
 

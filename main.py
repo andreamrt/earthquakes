@@ -1,42 +1,33 @@
 import argparse
 from datetime import datetime, timedelta
+import pandas as pd
 
 from csv_writer.csv_writer import write_daily_stats, write_highest_earthquakes
 from database.dbmanager import DatabaseManager
 from utils.get_earthquakes import get_earthquakes
-
-
-def check_positive_integer(value):
-    """Convert a string to an integer value and check it is positive.
-
-    Parameters:
-        - value: the string to be converted and checked
-
-    Raise:
-        - ArgumentTypeError: if the value is <= 0
-        - ValueError: if the value cannot be transformed in an integer
-    """
-    try:
-        int_value = int(value)
-        if int_value <= 0:
-            raise argparse.ArgumentTypeError(
-                ('%s is an invalid positive integer value. '
-                 'The number of days must be > 0') % value)
-        return int_value
-    except ValueError:
-        raise argparse.ArgumentTypeError(
-            "%s is not a positive integer value" % value)
+from utils.argparse_util import check_positive_integer
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--days', dest='days', type=check_positive_integer,
-                    help='number of days to analyze, must be > 0',
+                    help='Number of days to analyze, must be > 0',
                     required=True)
 parser.add_argument('--no-cache', dest='cache', action='store_true',
-                    help='do not use cached data', default=False)
+                    help='Do not use cached data', default=False)
 parser.add_argument('--no-csv', dest='csv', action='store_true',
-                    help='do not save additional information on csv files',
+                    help='Do not save additional information on csv files',
                     default=False)
+parser.add_argument('--no-table', dest='table', action='store_true',
+                    help='Do not print highest earthquakes',
+                    default=False)
+parser.add_argument('-tl', '--table-limit', dest='table_limit',
+                    help=('Specify number of rows for the printed table. '
+                          'Default value = 10'),
+                    nargs='?', type=check_positive_integer, default=10)
+parser.add_argument('-cl', '--csv-limit', dest='csv_limit',
+                    help=('Specity number of rows for the csv table. '
+                          'Default value=10'),
+                    nargs='?', type=check_positive_integer, default=10)
 args = parser.parse_args()
 
 db = DatabaseManager('database/earthquakes.db')
@@ -59,7 +50,8 @@ if not args.cache:
 earthquakes = get_earthquakes(search_date)
 db.add_elements(earthquakes)
 
-highest_earthquake = db.select_highest(1, start_date)[0]
+highest = db.select_highest(args.table_limit, start_date)
+highest_earthquake = highest[0]
 print(
     ('The largest earthquake of last {} days had magnitude {}\n'
      'and was located at {} on {}')
@@ -68,10 +60,18 @@ print(
             highest_earthquake[2],
             highest_earthquake[0])
 )
+if not args.table:
+    print('\n These are the {} strongest earthquakes in the past {} days:\n'
+          .format(args.table_limit, args.days))
+
+    table = pd.DataFrame(highest)
+    table.index += 1
+    table.columns = ['Date', 'Magnitude', 'Location']
+    print(table)
 
 # write additional information to csv files
 if not args.csv:
     write_daily_stats(db)
-    write_highest_earthquakes(db, start_date, 10)
+    write_highest_earthquakes(db, start_date, args.csv_limit)
 
 db.close_connection()

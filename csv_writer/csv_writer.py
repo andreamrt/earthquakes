@@ -8,6 +8,7 @@ def write_daily_stats(db, filename='daily_stats.csv'):
 
     Parameters:
         - db: the database containing the information
+        - filename: csv file destination
     """
     try:
         daily_stats = db.select_daily_stats()
@@ -29,6 +30,7 @@ def write_highest_earthquakes(db,  start_date, limit=1,
         - db: the database containing the information
         - limit: the number of earthquakes desired
         - start_date: starting date for the search
+        - filename: csv file destination
     """
     try:
         highest_earthquakes = db.select_highest(limit, start_date)
