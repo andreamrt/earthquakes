@@ -45,7 +45,6 @@ db = DatabaseManager('database/earthquakes.db')
 start_date = search_date = (
     datetime.now() + timedelta(days=-args.days)).strftime("%Y-%m-%d")
 
-print(start_date)
 if not args.cache:
     max_date = db.max_date()
     min_date = db.min_date()
