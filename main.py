@@ -25,8 +25,8 @@ parser.add_argument('-tl', '--table-limit', dest='table_limit',
                           'Default value = 10'),
                     nargs='?', type=check_positive_integer, default=10)
 parser.add_argument('-cl', '--csv-limit', dest='csv_limit',
-                    help=('Specity number of rows for the csv table. '
-                          'Default value=10'),
+                    help=('Specity number of highest earthquakes to write '
+                          'to csv. Default value=10'),
                     nargs='?', type=check_positive_integer, default=10)
 args = parser.parse_args()
 

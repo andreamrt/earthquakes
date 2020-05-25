@@ -21,7 +21,7 @@ where:
 - no-csv: do not write additional information to csv files. OPTIONAL  
 - no-table: do not not print highest earthquakes. OPTIONAL  
 - tl rows: specify the number of rows of the table to print  OPTIONAL DEFAULT = 10
-- Cl rows: specify the number of rows of the CSV  OPTIONAL DEFAULT = 10
+- cl rows: specify the number of rows of the highest earthquakes csv file  OPTIONAL DEFAULT = 10
 
 
 #### Optional
