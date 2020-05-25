@@ -21,7 +21,6 @@ args = parser.parse_args()
 
 db = DatabaseManager('../database/earthquakes.db')
 
-print(args.populate)
 if args.populate:
     # calculate starting date by subtracting 2 weeks
     start_date = (datetime.now() +
